@@ -1,0 +1,17 @@
+.bookmark {
+    
+    width: 25px;
+    vertical-align: middle;
+    height: 25px;
+    display: inline-block;
+    cursor:pointer;
+    margin-right : -6px;
+}
+
+.add{
+    background-image: url('chrome-extension://__MSG_@@extension_id__/assets/img/addButton.png');
+}
+
+.remove{
+    background-image: url('chrome-extension://__MSG_@@extension_id__/assets/img/removeButton.png');
+}

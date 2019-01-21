@@ -1,0 +1,40 @@
+{
+    "manifest_version": 2,
+    "name": "FeedNotes",
+    "version": "1.0.0",
+    "description": "Notes for your social feeds important posts",
+    "author": "OmerB",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "tabs",
+        "http://facebook.com/*",
+        "https://facebook.com/*",
+        "https://www.facebook.com/*",
+        "http://www.facebook.com/*"
+    ],
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": true
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.facebook.com/*"
+            ],
+            "css": [
+                "main.css"
+            ],
+            "js": [
+                "handleFb.js",
+                "utils.js",
+                "main.js"
+                
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources" : ["assets/img/*"]
+}
