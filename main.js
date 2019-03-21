@@ -101,6 +101,10 @@ var main = () => {
 
     };
 
+    var devTests = () => {
+        setTimeout(() => {console.log($("div[id*='feed_subtitle'] a[rel='theater']"))}, 5000);
+    };
+
     a.init = () => {
 
         // Injecting jquery into webpage
@@ -116,7 +120,9 @@ var main = () => {
                     // Adding Listeners
                     addListeners();
 
-                    // Handling page loaded
+                    // Execute dev tests
+                    devTests();
+
                     //handlePageLoad();
                 })
             .catch(

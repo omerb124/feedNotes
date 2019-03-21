@@ -23,3 +23,11 @@ body[dir="ltr"] .bookmark{
 .remove{
     background-image: url('chrome-extension://__MSG_@@extension_id__/assets/img/removeButton.png');
 }
+
+/**
+ * Fixing postDateElementWrongVerticalAlign from being above icons 
+ */
+div[data-testid='story-subtitle'] a[role='button'] span,
+div[data-testid='story-subtitle'] a[rel='theater'] span {
+    vertical-align: middle;
+}
