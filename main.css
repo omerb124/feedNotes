@@ -5,7 +5,15 @@
     height: 25px;
     display: inline-block;
     cursor:pointer;
+
+}
+
+body[dir="rtl"] .bookmark{
     margin-right : -6px;
+}
+
+body[dir="ltr"] .bookmark{
+    margin-left : -6px;
 }
 
 .add{
