@@ -18,6 +18,10 @@
 
 }
 
+.bookmark:hover{
+    text-decoration: none;
+}
+
 body[dir="rtl"] .bookmark {
     margin-right: -6px;
 }

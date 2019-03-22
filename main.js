@@ -106,14 +106,8 @@ var main = () => {
         injectScript({ file: "/assets/js/popper.min.js" })
             .then(() => {
                 console.log("Popper has been loaded successfully");
-                document.getElementById("pagelet_composer").innerHTML += '<button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-title="שמור פוסט זה" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">Popover on right</button>';
                 setTimeout(() => {
-                    $('span.add').popover({
-                        title: 'בחר תגית לשמירת הפוסט:',
-                        container: 'body',
-                        html: true,
-                        content: createPopoverContentElement("add")
-                    });
+                   
                 }, 1500);
             }
 

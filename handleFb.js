@@ -65,9 +65,10 @@ var getPosts = () => {
  */
 
 var createButton = (postId,postLink) => {
-    let button = document.createElement("span");
+    let button = document.createElement("a");
     button.className = "bookmark add";
     button.innerHTML = "&nbsp;";
+    button.setAttribute("tabindex","0");
     button.setAttribute("data-toggle","popover");
     button.setAttribute("data-placement","right");
     button.setAttribute("data-container","body");
@@ -89,7 +90,15 @@ var addButton = (ele,postId,postLink) => {
     if(!$(ele).has(".bookmark").length){
 
         $(ele).append('<span class="_6spk" role="presentation" aria-hidden="true"> · </span>');
-        $(ele).append(createButton(postId,postLink));
+        let newBtn = createButton(postId,postLink);
+        $(ele).append(newBtn);
+        $(newBtn).popover({
+            title: 'בחר תגית לשמירת הפוסט:',
+            container: 'body',
+            html: true,
+            trigger : 'focus',
+            content: createPopoverContentElement("add")
+        });
     }
     else{
         console.log("Already added");
