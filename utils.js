@@ -35,15 +35,15 @@ var injectScript = (injectDetails) => {
 var getEvents = (element) => {
     var elemEvents = $._data(element, "events");
     var allDocEvnts = $._data(document, "events");
-    for(var evntType in allDocEvnts) {
-        if(allDocEvnts.hasOwnProperty(evntType)) {
+    for (var evntType in allDocEvnts) {
+        if (allDocEvnts.hasOwnProperty(evntType)) {
             var evts = allDocEvnts[evntType];
-            for(var i = 0; i < evts.length; i++) {
-                if($(element).is(evts[i].selector)) {
-                    if(elemEvents == null) {
+            for (var i = 0; i < evts.length; i++) {
+                if ($(element).is(evts[i].selector)) {
+                    if (elemEvents == null) {
                         elemEvents = {};
                     }
-                    if(!elemEvents.hasOwnProperty(evntType)) {
+                    if (!elemEvents.hasOwnProperty(evntType)) {
                         elemEvents[evntType] = [];
                     }
                     elemEvents[evntType].push(evts[i]);
@@ -52,4 +52,32 @@ var getEvents = (element) => {
         }
     }
     return elemEvents;
+}
+
+/**
+ * Creating popover content element for clicking event
+ * @param {String} type - button type (add/ remove)
+ * @return {Object} - Content element
+ */
+var createPopoverContentElement = (type) => {
+    type = type || null;
+    switch (type) {
+        case 'add':
+            let ele = document.createElement("div");
+            ele.class = "popoverContentContainer";
+            ele.innerHTML =
+                '<ul class="list-group tags_list">' + 
+                '   <li class="list-group-item tag"><i class="fas fa-briefcase"></i> עבודה</li>' + 
+                '   <li class="list-group-item tag"><i class="fas fa-user-alt"></i> אישי</li>' +
+                '   <li class="list-group-item tag"><i class="fas fa-star"></i> לקריאה מאוחר יותר</li>' +
+                '   <li class="list-group-item addTag"><i class="fas fa-plus-circle"></i> הוסף תווית...</li>' +
+                '</ul>';
+            return ele.outerHTML;
+            break;
+        case 'remove':
+
+            break;
+        default:
+        // DO NOTHING
+    }
 }

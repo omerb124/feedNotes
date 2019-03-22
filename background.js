@@ -9,9 +9,9 @@
 
             switch (request.type) {
                 case 'clickBody':
-                    chrome.tabs.query({active: true, currentWindow: true},(tabs) => {
+                    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                         console.log(tabs);
-                        sendResponse({good: true});
+                        sendResponse({ good: true });
                     });
                     return true;
                     break;
@@ -20,28 +20,28 @@
                     if (sender.tab && "injectDetails" in request.data) {
                         let tabid = sender.tab.id;
                         console.log(tabid);
-                        let injectDetails = { file : "assets/js/jquery-3.3.1.min.js" }
-                        //request.data.injectDetails;
+                        let filePath = request.data.injectDetails.file || null;
+                        if (filePath) {
+                            chrome.tabs.executeScript(tabid, {file : filePath}, (data) => {
+                                if (chrome.runtime.lastError) {
+                                    // Chrome error
+                                    responseData = {
+                                        status: 500,
+                                        message: chrome.runtime.lastError.message
+                                    };
 
-                        chrome.tabs.executeScript(tabid, injectDetails, (data) => {
-                            if (chrome.runtime.lastError) {
-                                // Chrome error
-                                responseData = {
-                                    status: 500,
-                                    message: chrome.runtime.lastError.message
-                                };
-                                
-                            } else {
-                                // Success
-                                responseData = {
-                                    status: 200,
-                                    data: data
-                                };
+                                } else {
+                                    // Success
+                                    responseData = {
+                                        status: 200,
+                                        data: data
+                                    };
 
-                            }
-                            sendResponse(responseData);
-                        });
-                        
+                                }
+                                sendResponse(responseData);
+                            });
+                        }
+
                         // Async response
                         return true;
                     }
@@ -59,7 +59,7 @@
                 // Do Nothing
             }
 
-            
+
 
         };
 

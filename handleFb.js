@@ -68,6 +68,9 @@ var createButton = (postId,postLink) => {
     let button = document.createElement("span");
     button.className = "bookmark add";
     button.innerHTML = "&nbsp;";
+    button.setAttribute("data-toggle","popover");
+    button.setAttribute("data-placement","right");
+    button.setAttribute("data-container","body");
     button.setAttribute("post-id",postId);
     button.setAttribute("post-url",postLink);
     return button;

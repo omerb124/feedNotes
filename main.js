@@ -30,25 +30,25 @@ var main = () => {
         //         });
         //     }
         // });
-        
+
         // Feed posts
         $(document).on('DOMNodeInserted', 'div[data-testid="fbfeed_story"]', (evt) => {
-            handleInsertedNewPost(evt,'feed');
+            handleInsertedNewPost(evt, 'feed');
         });
 
         // Group page posts
         $(document).on('DOMNodeInserted', "div[id*='mall_post']:not([id*='SUGGESTED'])", (evt) => {
-            handleInsertedNewPost(evt,'group');
+            handleInsertedNewPost(evt, 'group');
         });
 
         // Page posts
         $(document).on('DOMNodeInserted', "#pagelet_timeline_main_column div[role='article']", (evt) => {
-            handleInsertedNewPost(evt,'page');
+            handleInsertedNewPost(evt, 'page');
         });
 
         // Events pages posts
         $(document).on('DOMNodeInserted', "div[id*='mall_post'][role='article'], div[id*='event_post'][role='article']", (evt) => {
-            handleInsertedNewPost(evt,'event');
+            handleInsertedNewPost(evt, 'event');
         });
     }
 
@@ -58,7 +58,7 @@ var main = () => {
      * @param {String} type - post source type (group page post, feed post)
      * @void
      */
-    var handleInsertedNewPost = (evt,type) => {
+    var handleInsertedNewPost = (evt, type) => {
         // Check if post has already been added
         console.log
         if (!posts_containers.includes(evt.currentTarget)) {
@@ -102,13 +102,28 @@ var main = () => {
     };
 
     var devTests = () => {
-        setTimeout(() => {console.log($("div[id*='feed_subtitle'] a[rel='theater']"))}, 5000);
+       
+        injectScript({ file: "/assets/js/popper.min.js" })
+            .then(() => {
+                console.log("Popper has been loaded successfully");
+                document.getElementById("pagelet_composer").innerHTML += '<button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-title="שמור פוסט זה" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">Popover on right</button>';
+                setTimeout(() => {
+                    $('span.add').popover({
+                        title: 'בחר תגית לשמירת הפוסט:',
+                        container: 'body',
+                        html: true,
+                        content: createPopoverContentElement("add")
+                    });
+                }, 1500);
+            }
+
+            );
     };
 
     a.init = () => {
 
         // Injecting jquery into webpage
-        injectScript({ file: "/assets/js/jquery-3.3.1.min.js" })
+        injectScript({ file: "/assets/js/popper.min.js" })
             .then(
                 () => {
                     console.log("Jquery has been injected.");
@@ -135,9 +150,9 @@ var main = () => {
 
 
 
-        // ...
+        // // ...
 
-        return a;
+        // return a;
     }
 
     return a.init();
