@@ -22,7 +22,7 @@
                         console.log(tabid);
                         let filePath = request.data.injectDetails.file || null;
                         if (filePath) {
-                            chrome.tabs.executeScript(tabid, {file : filePath}, (data) => {
+                            chrome.tabs.executeScript(tabid, { file: filePath }, (data) => {
                                 if (chrome.runtime.lastError) {
                                     // Chrome error
                                     responseData = {
@@ -63,8 +63,36 @@
 
         };
 
+        /**
+    * Creating context menu for saving note within right click on post
+    * @void
+    */
+        var addContextMenu = () => {
+
+            chrome.contextMenus.create(
+                {
+                    title: "שמור פוסט זה",
+                    documentUrlPatterns: [
+                        "http://facebook.com/*",
+                        "https://facebook.com/*",
+                        "https://www.facebook.com/*",
+                        "http://www.facebook.com/*"
+                    ],
+                    onclick: () => {
+                        // Find active tab
+                        chrome.tabs.query({active : true}, (tabs) => {
+                            let activeTabId = tabs[0].id;
+                            chrome.tabs.sendMessage(activeTabId, "contextMenuClicked");
+                        });
+                        
+                    }
+                }
+            );
+        };
+
         a.init = () => {
             chrome.runtime.onMessage.addListener(messageListener);
+            addContextMenu();
             console.log("Background Initialized");
         }
 
@@ -73,5 +101,6 @@
 
     chrome.runtime.onInstalled.addListener(() => {
         bgscript();
+        addContextMenu();
     });
 })();

@@ -93,7 +93,7 @@ var addButton = (ele,postId,postLink) => {
         let newBtn = createButton(postId,postLink);
         $(ele).append(newBtn);
         $(newBtn).popover({
-            title: 'בחר תגית לשמירת הפוסט:',
+            title: 'בחר תווית לשמירת הפוסט:',
             container: 'body',
             html: true,
             trigger : 'focus',

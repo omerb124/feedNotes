@@ -7,16 +7,19 @@
 var main = () => {
     let a = {};
 
-    a.settings = {};
+    a.settings = {}; 
 
     const posts_containers = [];
+
+    // Empty right-clicked element for future context menu using
+    var rightClickedEl = null;
 
     /**
      * Adds listeners to doucment elements
      * @void
      */
 
-    var addListeners = () => {
+    var addDOMListeners = () => {
 
         // jq('div[id="content"]').on("DOMNodeInserted", () => {
         //     // jq('div[data-testid="fbfeed_story"]').on("DOMNodeInserted", () => {
@@ -50,6 +53,14 @@ var main = () => {
         $(document).on('DOMNodeInserted', "div[id*='mall_post'][role='article'], div[id*='event_post'][role='article']", (evt) => {
             handleInsertedNewPost(evt, 'event');
         });
+
+        // Listener for right-click (context menu)
+        $(document).on("mousedown", (evt) => {
+            if (event.button == 2) {
+                rightClickedEl = evt.target;
+            }
+        });
+
     }
 
     /**
@@ -101,17 +112,42 @@ var main = () => {
 
     };
 
+
+    /**
+     * Handling clicking on context menu within right click
+     * @void
+     */
+    var handleContextMenuClicked = () => {
+        if(rightClickedEl){
+            let bookmarkButton = findClosetstBookmarkButton(rightClickedEl);
+            console.log(bookmarkButton);
+            if(bookmarkButton.length !== 0){
+                // Parent post has been found
+                $(bookmarkButton).popover("show");
+            }
+        }  
+    };
+
     var devTests = () => {
-       
+
         injectScript({ file: "/assets/js/popper.min.js" })
             .then(() => {
                 console.log("Popper has been loaded successfully");
                 setTimeout(() => {
-                   
+
                 }, 1500);
             }
 
             );
+    };
+
+    var addBackgroundMessageListener = () => {
+        chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+            if (request ===  "contextMenuClicked") {
+                // Context menu clicking
+                handleContextMenuClicked();
+            }
+        });
     };
 
     a.init = () => {
@@ -127,10 +163,16 @@ var main = () => {
 
                     console.log(a.settings);
                     // Adding Listeners
-                    addListeners();
+                    addDOMListeners();
+
+                    // Add background messages listener
+                    addBackgroundMessageListener();
 
                     // Execute dev tests
-                    devTests();
+                    // devTests();
+
+                    // Add context menu on right-click
+                    // addContextMenu();
 
                     //handlePageLoad();
                 })

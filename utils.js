@@ -71,7 +71,7 @@ var createPopoverContentElement = (type) => {
                 '   <li class="list-group-item tag"><i class="fas fa-user-alt"></i> אישי</li>' +
                 '   <li class="list-group-item tag"><i class="fas fa-star"></i> לקריאה מאוחר יותר</li>' +
                 '   <li class="list-group-item addTag"><i class="fas fa-plus-circle"></i> הוסף תווית...</li>' +
-                '</ul>';
+                '</ul><button class="btn close">X</button>';
             return ele.outerHTML;
             break;
         case 'remove':
@@ -81,3 +81,12 @@ var createPopoverContentElement = (type) => {
         // DO NOTHING
     }
 }
+
+/**
+ * Finding the closest add's bookmark button (for the most closest post) for given element
+ * @param {DOM Object} element - the given element
+ * @return {DOM Object}
+ */
+var findClosetstBookmarkButton = (element) => {
+    return $(element).closest("div[data-testid='fbfeed_story']").first().find(".bookmark.add").first() || null;
+};
