@@ -64,9 +64,9 @@
         };
 
         /**
-    * Creating context menu for saving note within right click on post
-    * @void
-    */
+         * Creating context menu for saving note within right click on post
+         * @void
+         */
         var addContextMenu = () => {
 
             chrome.contextMenus.create(
@@ -80,18 +80,21 @@
                     ],
                     onclick: () => {
                         // Find active tab
-                        chrome.tabs.query({active : true}, (tabs) => {
+                        chrome.tabs.query({ active: true }, (tabs) => {
                             let activeTabId = tabs[0].id;
                             chrome.tabs.sendMessage(activeTabId, "contextMenuClicked");
                         });
-                        
+
                     }
                 }
             );
         };
 
         a.init = () => {
+            // Adding messages listener
             chrome.runtime.onMessage.addListener(messageListener);
+
+            // Adding context menu
             addContextMenu();
             console.log("Background Initialized");
         }
@@ -100,7 +103,7 @@
     };
 
     chrome.runtime.onInstalled.addListener(() => {
+        // Main background script
         bgscript();
-        addContextMenu();
     });
 })();

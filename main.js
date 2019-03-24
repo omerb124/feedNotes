@@ -123,7 +123,7 @@ var main = () => {
             console.log(bookmarkButton);
             if(bookmarkButton.length !== 0){
                 // Parent post has been found
-                $(bookmarkButton).popover("show");
+                $(bookmarkButton).popover("toggle");
             }
         }  
     };
