@@ -90,12 +90,37 @@
             );
         };
 
+        /**
+         * Building DB (local storage) structure:
+         * - Creating varibles of labels & notes
+         * - Adding default labels
+         * @void
+         */
+        var buildingDb = () => {
+            // Creating Notes varible
+            chrome.storage.local.set({ notes: [] }, () => { console.log("Notes variable has been successfully added.") });
+
+            // Creating Labels variable with default labels
+            chrome.storage.local.set({
+                labels: [
+                    { name: 'Work', id: 1 },
+                    { name: 'Read Later', id: 2 },
+                    { name: 'Personal', id: 3 }
+                ]
+            },() => { console.log ("Labels variable has been successfully added with default labels")});
+
+        };
+
         a.init = () => {
             // Adding messages listener
             chrome.runtime.onMessage.addListener(messageListener);
 
             // Adding context menu
             addContextMenu();
+
+            // Building local storage of labels & notes variables
+            buildingDb();
+
             console.log("Background Initialized");
         }
 
