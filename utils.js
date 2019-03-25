@@ -63,16 +63,26 @@ var createPopoverContentElement = (type) => {
     type = type || null;
     switch (type) {
         case 'add':
-            let ele = document.createElement("div");
-            ele.class = "popoverContentContainer";
-            ele.innerHTML =
-                '<ul class="list-group tags_list">' + 
-                '   <li class="list-group-item tag"><i class="fas fa-briefcase"></i> עבודה</li>' + 
-                '   <li class="list-group-item tag"><i class="fas fa-user-alt"></i> אישי</li>' +
-                '   <li class="list-group-item tag"><i class="fas fa-star"></i> לקריאה מאוחר יותר</li>' +
-                '   <li class="list-group-item addTag"><i class="fas fa-plus-circle"></i> הוסף תווית...</li>' +
-                '</ul><button class="btn close">X</button>';
-            return ele.outerHTML;
+            return new Promise((resolve, reject) => {
+                Label.getTopLabels().then((result) => {
+                    console.log(result);
+                    let ele = document.createElement("div");
+                    ele.class = "popoverContentContainer";
+                    ele.innerHTML = '<ul class="list-group tags_list">';
+
+                    // Adding each favorite label to popover fast-selection
+                    for (let i = 0; i < result.length; i++) {
+                        ele.innerHTML += '<li class="list-group-item tag" data-label-id="' + result[i]['id'] + '"><i class="fas fa-briefcase"></i>' + result[i]['name'] + '</li>';
+                    }
+
+                    // Adding 'add label' in the end of the popover
+                    ele.innerHTML += '<li class="list-group-item addTag"><i class="fas fa-plus-circle"></i> הוסף תווית...</li>';
+                    // Close button
+                    ele.innerHTML += '</ul><button class="btn close">X</button>';
+                    resolve(ele.outerHTML);
+                });
+            });
+
             break;
         case 'remove':
 

@@ -39,11 +39,14 @@
             ],
             "js": [
                 "assets/js/jquery-3.3.1.min.js",
+                "note.js",
+                "label.js",
                 "handleFb.js",
                 "utils.js",
                 "main.js",
                 "assets/js/popper.min.js",
                 "assets/js/bootstrap.min.js"
+                
 
             ],
             "run_at": "document_end"

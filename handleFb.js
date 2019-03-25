@@ -9,26 +9,26 @@
  *
  * @void
  */
- var getFbSettings = () => {
+var getFbSettings = () => {
     const writingDirection = $("body").attr("dir");
     const currentUrl = window.location.href.toString();
-    
+
     let bodyClasses = $("body").attr("class").split(" ");
     //console.log(bodyClasses);
     var language = "unknown";
     bodyClasses.forEach((val) => {
-        if(val.toLowerCase().indexOf('locale') !== -1){
+        if (val.toLowerCase().indexOf('locale') !== -1) {
             language = val;
         }
     });
-    
-    return { 
-        writingDirection : writingDirection,
-        currentUrl : currentUrl,
-        language : language
+
+    return {
+        writingDirection: writingDirection,
+        currentUrl: currentUrl,
+        language: language
     };
 
- };
+};
 
 /**
  * Returns all the new posts in feed
@@ -64,16 +64,16 @@ var getPosts = () => {
  * @return {Object}
  */
 
-var createButton = (postId,postLink) => {
+var createButton = (postId, postLink) => {
     let button = document.createElement("a");
     button.className = "bookmark add";
     button.innerHTML = "&nbsp;";
-    button.setAttribute("tabindex","0");
-    button.setAttribute("data-toggle","popover");
-    button.setAttribute("data-placement","right");
-    button.setAttribute("data-container","body");
-    button.setAttribute("post-id",postId);
-    button.setAttribute("post-url",postLink);
+    button.setAttribute("tabindex", "0");
+    button.setAttribute("data-toggle", "popover");
+    button.setAttribute("data-placement", "right");
+    button.setAttribute("data-container", "body");
+    button.setAttribute("post-id", postId);
+    button.setAttribute("post-url", postLink);
     return button;
 };
 
@@ -85,26 +85,29 @@ var createButton = (postId,postLink) => {
  * @param {Object} space - space element ("•")
  * @void
  */
-var addButton = (ele,postId,postLink) => {
+var addButton = (ele, postId, postLink) => {
     // Validate element don't has the button
-    if(!$(ele).has(".bookmark").length){
+    if (!$(ele).has(".bookmark").length) {
 
-        $(ele).append('<span class="_6spk" role="presentation" aria-hidden="true"> · </span>');
-        let newBtn = createButton(postId,postLink);
-        $(ele).append(newBtn);
-        $(newBtn).popover({
-            title: 'בחר תווית לשמירת הפוסט:',
-            container: 'body',
-            html: true,
-            trigger : 'focus',
-            content: createPopoverContentElement("add")
+        createPopoverContentElement("add").then((result) => {
+            $(ele).append('<span class="_6spk" role="presentation" aria-hidden="true"> · </span>');
+            let newBtn = createButton(postId, postLink);
+            $(ele).append(newBtn);
+            $(newBtn).popover({
+                title: 'בחר תווית לשמירת הפוסט:',
+                container: 'body',
+                html: true,
+                trigger: 'focus',
+                content: result
+            });
         });
+
     }
-    else{
+    else {
         console.log("Already added");
     }
-    
-}; 
+
+};
 
 
 /**

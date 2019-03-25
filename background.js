@@ -94,6 +94,7 @@
          * Building DB (local storage) structure:
          * - Creating varibles of labels & notes
          * - Adding default labels
+         * - Creating settings variable
          * @void
          */
         var buildingDb = () => {
@@ -103,14 +104,32 @@
             // Creating Labels variable with default labels
             chrome.storage.local.set({
                 labels: [
-                    { name: 'Work', id: 1 },
-                    { name: 'Read Later', id: 2 },
-                    { name: 'Personal', id: 3 }
+                    { name: 'None', id: generateUniqueId('l'), faIconId: 'sticky-note'},
+                    { name: 'Personal', id: generateUniqueId('l'), faIconId: 'user-tag' },
+                    { name: 'Work', id: generateUniqueId('l'), faIconId: 'briefcase'}
                 ]
-            },() => { console.log ("Labels variable has been successfully added with default labels")});
+            }, () => { console.log("Labels variable has been successfully added with default labels") });
+
+            // Initialize settings variable
+            chrome.storage.local.set(
+                { settings: {} },
+                () => {
+                    console.log("Settings variable has been successfully initialized.")
+                });
+
 
         };
 
+        /**
+         * Returns unique ID
+         * @param {String} char - the starting letter of the unique ID (optional) (default - 'd')
+         * @return {String}
+         */
+        var generateUniqueId = (char) => {
+            char = char || "d";
+            return (char + (Math.random().toString(36).substring(2, 15) +
+            Math.random().toString(36).substring(2, 15)));
+        };
         a.init = () => {
             // Adding messages listener
             chrome.runtime.onMessage.addListener(messageListener);
