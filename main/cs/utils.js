@@ -68,17 +68,26 @@ var createPopoverContentElement = (type) => {
                     console.log(result);
                     let ele = document.createElement("div");
                     ele.class = "popoverContentContainer";
-                    ele.innerHTML = '<ul class="list-group tags_list">';
+
+                    // Create element's inner HTML
+                    let html = '<ul class="list-group tags_list">';
 
                     // Adding each favorite label to popover fast-selection
                     for (let i = 0; i < result.length; i++) {
-                        ele.innerHTML += '<li class="list-group-item tag" data-label-id="' + result[i]['id'] + '"><i class="fas fa-briefcase"></i>' + result[i]['name'] + '</li>';
+                        html += '<li class="list-group-item tag">';
+                        html += '<i class="fa fa-' + result[i]['faIconId'] + '"></i>';
+                        html += '<span class="label_name" data-label-id="' + result[i]['id'] + '">' + result[i]['name'] + '</span></li>';
                     }
 
                     // Adding 'add label' in the end of the popover
-                    ele.innerHTML += '<li class="list-group-item addTag"><i class="fas fa-plus-circle"></i> הוסף תווית...</li>';
+                    html += '<li class="list-group-item addTag"><i class="fas fa-plus-circle"></i> הוסף תווית...</li>';
+
                     // Close button
-                    ele.innerHTML += '</ul><button class="btn close">X</button>';
+                    html += '</ul><button class="btn close">X</button>';
+
+                    // Appending html to element
+                    console.log(html);
+                    ele.innerHTML += html;
                     resolve(ele.outerHTML);
                 });
             });

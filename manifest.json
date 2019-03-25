@@ -22,7 +22,7 @@
     },
     "background": {
         "scripts": [
-            "background.js"
+            "main/background/background.js"
         ],
         "persistent": true
     },
@@ -32,18 +32,18 @@
                 "*://*.facebook.com/*"
             ],
             "css": [
-                "main.css",
+                "assets/css/main.css",
                 "assets/css/all.css",
                 "assets/css/list-group.css"
                 
             ],
             "js": [
                 "assets/js/jquery-3.3.1.min.js",
-                "note.js",
-                "label.js",
-                "handleFb.js",
-                "utils.js",
-                "main.js",
+                "main/cs/note.js",
+                "main/cs/label.js",
+                "main/cs/handleFb.js",
+                "main/cs/utils.js",
+                "main/cs/main.js",
                 "assets/js/popper.min.js",
                 "assets/js/bootstrap.min.js"
                 
