@@ -61,6 +61,11 @@ var main = () => {
             }
         });
 
+        // Listener for choosing label action (adding note)
+        $(document).on("click","li.list-group-item.tag",(evt) => {
+            Note.add(evt.target);
+        });
+
     }
 
     /**

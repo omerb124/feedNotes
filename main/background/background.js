@@ -104,9 +104,9 @@
             // Creating Labels variable with default labels
             chrome.storage.local.set({
                 labels: [
-                    { name: 'None', id: generateUniqueId('l'), faIconId: 'sticky-note'},
-                    { name: 'Personal', id: generateUniqueId('l'), faIconId: 'user-tag' },
-                    { name: 'Work', id: generateUniqueId('l'), faIconId: 'briefcase'}
+                    { name: 'ללא', id: generateUniqueId('l'), faIconId: 'sticky-note'},
+                    { name: 'אישי', id: generateUniqueId('l'), faIconId: 'user-alt' },
+                    { name: 'עבודה', id: generateUniqueId('l'), faIconId: 'briefcase'}
                 ]
             }, () => { console.log("Labels variable has been successfully added with default labels") });
 

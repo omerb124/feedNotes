@@ -6,24 +6,16 @@ class Note {
 
     /**
      * 
-     * @param {String} content - post's content
-     * @param {String} postUrl - contains post's url
-     * @param {String} photoUrl- photo url
-     * @param {Object} info - post's info (facebook id (fb_id), publishing date (publishing_date), author name and id) 
-     * @param {String} label - label's id (default to 1 - default label)
+     * @param {Object} data - note's data to push into chrome storage
+     * @param {String} labelId - label's id (default to 1 - default label)
      */
-    constructor(content, postUrl, photoUrl, info, label) {
-        this.content = content;
-        this.url = postUrl;
-        this.photoUrl = photoUrl;
-        this.fbId = info['fb_id'];
-        this.publishingDate = info['publishing_date'];
-        this.author = { name: info['author_name'], id: info['author_id'] };
-        this.label = label || 1;
+    constructor(data, labelId) {
+        this.data = data;
+        this.labelId = labelId;
 
         // Generate unique ID
-        this.id = "n" +(Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15));
+        this.id = "n" + (Math.random().toString(36).substring(2, 15) +
+            Math.random().toString(36).substring(2, 15));
 
         // Add note to storage
         this._addToStorage()
@@ -84,14 +76,14 @@ class Note {
      * @return {Promise}
      */
     static changeLabel = (noteId, labelId) => {
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve, reject) => {
             chrome.storage.local.get('notes', (notesList) => {
 
                 let filteredList = notesList.notes.filter((n) => n.id === noteId);
-                if(filteredList.length === 0){
+                if (filteredList.length === 0) {
                     reject("Note with ID:" + noteId + " wasn't found.");
                 }
-                else if(filteredList.length === 1){
+                else if (filteredList.length === 1) {
                     let currentNote = filteredList[0];
                     // Change label
                     currentNote.label = labelId;
@@ -99,15 +91,137 @@ class Note {
                     // Update storage about new label
                     let noteIndex = notesList.notes.indexOf(currentNote);
                     notesList.notes[noteIndex] = currentNote;
-     
-                    chrome.storage.local.set({notes : notesList.notes},() => {
+
+                    chrome.storage.local.set({ notes: notesList.notes }, () => {
                         resolve(true);
                     });
                 }
-                else{
+                else {
                     reject("Error");
                 }
             });
         });
+    }
+
+    /**
+     * Adding note to the given label + Extracting the neccessary data from the element
+     * @param {DOM Event Object} ele - given clicked element of chosen label for new note
+     * @void
+     */
+    static add = (ele) => {
+        let post; // Post's container
+        let labelId; // Label ID
+
+        console.log(ele);
+        if (ele.tagName.toLowerCase() === "span" || ele.tagName.toLowerCase() === "i") {
+            // Click has been executed not on the LI, but on one of the children
+            let li = $(ele).closest("li.list-group-item.tag")[0];
+            labelId = li.dataset['labelId']; // Get label ID
+            let postContainerId = li.dataset['postContainerId'];
+
+            if(postContainerId){
+                post = $('div[id="' + postContainerId + '"]')[0];
+                console.log(post);
+            }
+            else{
+                console.log("Cannot find post container");
+                console.log(ele);
+            }
+
+        }
+        else if (ele.tagName.toLowerCase() === "li") {
+            // Click has been executed on the LI element
+            labelId = ele.dataset['labelId']; // Get label ID
+            let postContainerId = ele.dataset['postContainerId'];
+            if(postContainerId){
+                post = $('div[id="' + postContainerId + '"]')[0];
+                console.log(post);
+            }
+            else{
+                console.log("Cannot find post container");
+                console.log(ele);
+            }
+        }
+        else{
+            // Element is not recognized as valid element for action
+            console.log("Element is not recognized as valid element for action");
+            return;
+        }
+
+        let data = extractPostDataFromContainer(post);
+
+        // Generate new note
+        var note = new Note(data,labelId);
+
+    };
+
+    /**
+     * Creating popover content element for clicking event
+     * @param {String} type - button type (add/ remove)
+     * @param {String} postContainerUniqueID - post's container's unique ID
+     * @return {Object} - Content element
+     */
+    static createPopoverContentElement = (type,postContainerUniqueID) => {
+        type = type || null;
+        switch (type) {
+            case 'add':
+                return new Promise((resolve, reject) => {
+                    Label.getTopLabels().then((result) => {
+                        console.log(result);
+                        let ele = document.createElement("div");
+                        ele.class = "popoverContentContainer";
+
+                        let ulList = document.createElement("ul");
+                        ulList.className = "list-group tags_list";
+
+                        // Adding each favorite label to popover fast-selection
+                        for (let i = 0; i < result.length; i++) {
+                            let liMember = document.createElement("li");
+                            liMember.className = "list-group-item tag";
+                            liMember.setAttribute("data-label-id", result[i]['id']);
+                            liMember.setAttribute("data-post-container-id", postContainerUniqueID);
+
+                            // Create icon's element
+                            let faIcon = document.createElement("i");
+                            faIcon.className = "fa fa-" + result[i]['faIconId'];
+                            liMember.appendChild(faIcon);
+
+                            // Create button's element
+                            let aButton = document.createElement("span");
+                            aButton.className = "label_name";
+                            aButton.innerHTML = result[i]['name'];
+
+                            //aButton.setAttribute("onclick","Note.add(this)");
+                            liMember.appendChild(aButton);
+
+                            // Add label to list
+                            ulList.appendChild(liMember);
+                        }
+
+                        // Adding 'add label' in the end of the popover
+                        let addNewLabelLi = document.createElement("li");
+                        addNewLabelLi.className = "list-group-item addTag";
+                        let addNewLabelIcon = document.createElement("i");
+                        addNewLabelIcon.className = "fas fa-plus-circle";
+                        addNewLabelLi.appendChild(addNewLabelIcon);
+                        addNewLabelLi.innerHTML += " הוסף תווית...";
+
+                        ulList.appendChild(addNewLabelLi);
+
+                        ele.appendChild(ulList);
+
+
+                        //ele.getElementsByTagName("span")[0].setAttribute("data-label-id",result[i]['id']);
+                        resolve(ele);
+                    });
+                });
+
+                break;
+            case 'remove':
+
+                break;
+            default:
+            // DO NOTHING
+        }
     }
 }
